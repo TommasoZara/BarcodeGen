@@ -1,12 +1,13 @@
-# BarcodeGen
+# Barcode Generator
 
-This is a simple web application that allows users to generate barcodes with customizable parameters. Users can specify the starting number, step size, and last number to create a sequence of barcodes. Additionally, they can choose to generate random numbers within the specified range.
+This is a simple web application that allows users to generate barcodes with customizable parameters. Users can specify the starting number, step size, and last number to create a sequence of barcodes. Additionally, they can choose to generate random numbers within the specified range and configure the interval timeout for barcode generation.
 
 ## Features
 
 - Generate barcodes using JsBarcode library.
 - Customize barcode parameters such as format and display options.
 - Option to generate random numbers within the specified range.
+- Configure the interval timeout for barcode generation.
 - Stop barcode generation at any time.
 
 ## Getting Started
@@ -22,6 +23,7 @@ To use this application, follow these steps:
    - Steps: The increment between consecutive numbers (optional).
    - Generate Random Numbers: Check this box to generate random numbers (optional).
    - Last Number: The ending number for the barcode sequence.
+   - Interval Timeout (ms): The interval between generating consecutive barcodes (optional).
 
 4. Select a barcode type from the dropdown list.
 
