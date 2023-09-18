@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+    </style>
+    <!-- Include JsBarcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+</head>
+
+<body>
+    <!-- Form for barcode generation -->
+    <form id="barcodeForm">
+        <label for="startNumber">Start Number:</label>
+        <input type="number" id="startNumber" value="100">
+        <br>
+        <label for="steps">Steps:</label>
+        <input type="number" id="steps" value="1">
+        <br>
+        <input type="checkbox" id="randomizeCheckbox">
+        <label for="randomizeCheckbox">Generate Random Numbers</label>
+        <br>
+        <label for="lastNumber">Last Number:</label>
+        <input type="number" id="lastNumber" value="1000">
+        <br>
+        <select id="barcodeType" title="CODE128">
+            <!-- Options for barcode type -->
+            <option value="CODE128">CODE128 auto</option>
+            <option value="CODE128A">CODE128 A</option>
+            <option value="CODE128B">CODE128 B</option>
+            <option value="CODE128C">CODE128 C</option>
+            <option value="EAN13">EAN13</option>
+            <option value="EAN8">EAN8</option>
+            <option value="UPC">UPC</option>
+            <option value="CODE39">CODE39</option>
+            <option value="ITF14">ITF14</option>
+            <option value="ITF">ITF</option>
+            <option value="MSI">MSI</option>
+            <option value="MSI10">MSI10</option>
+            <option value="MSI11">MSI11</option>
+            <option value="MSI1010">MSI1010</option>
+            <option value="MSI1110">MSI1110</option>
+            <option value="pharmacode">Pharmacode</option>
+        </select>
+        <br>
+        <br>
+        <button type="button" id="generateButton">Generate Barcodes</button>
+    </form>
+    <!-- Button to stop barcode generation -->
+    <button type="button" id="stopButton" style="display:none;">Stop</button>
+    <!-- Container for the generated barcode -->
+    <svg id="barcode"></svg>
+
+    <script>
+        // Get references to form elements
+        const startNumberInput = document.getElementById("startNumber");
+        const stepsInput = document.getElementById("steps");
+        const randomizeCheckbox = document.getElementById("randomizeCheckbox");
+        const lastNumberInput = document.getElementById("lastNumber");
+        const generateButton = document.getElementById("generateButton");
+        const stopButton = document.getElementById("stopButton");
+        const barcodeType = document.getElementById("barcodeType");
+        const barcodeForm = document.getElementById("barcodeForm");
+        let generateInterval;
+
+        // Event listener for the Generate Barcodes button
+        generateButton.addEventListener("click", () => {
+            let startNumber = parseInt(startNumberInput.value);
+            const startNumberC = parseInt(startNumberInput.value);
+            const steps = parseInt(stepsInput.value);
+            const lastNumber = parseInt(lastNumberInput.value);
+            let randomize = false;
+
+            // Check if randomize checkbox is checked
+            if (randomizeCheckbox.checked) {
+                randomize = true;
+            }
+
+            // Check if inputs are valid
+            if (startNumber < lastNumber && startNumber + steps <= lastNumber) {
+                // Hide the form and show the Stop button
+                barcodeForm.style.display = "none";
+                stopButton.style.display = "block";
+
+                // Generate barcodes at intervals
+                generateInterval = setInterval(() => {
+                    if (randomize) {
+                        startNumber = Math.floor(Math.random() * (lastNumber - startNumberC + 1)) + startNumberC;
+                    }
+                    if (startNumber <= lastNumber) {
+                        // Generate barcode and display it in the SVG element
+                        JsBarcode('#barcode', startNumber.toString(), {
+                            format: barcodeType.value,
+                            displayValue: true
+                        });
+                        startNumber += steps;
+                    } else {
+                        // Reset to the initial start number
+                        startNumber = parseInt(startNumberInput.value);
+                    }
+                }, 300);
+            } else {
+                alert("Invalid input. Please check your values.");
+            }
+        });
+
+        // Event listener for the Stop button
+        stopButton.addEventListener("click", () => {
+            // Stop barcode generation and show the form again
+            clearInterval(generateInterval);
+            barcodeForm.style.display = "block";
+            stopButton.style.display = "none";
+        });
+    </script>
+</body>
+
+</html>
