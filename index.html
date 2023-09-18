@@ -82,6 +82,7 @@
             const steps = parseInt(stepsInput.value);
             const lastNumber = parseInt(lastNumberInput.value);
             let randomize = false;
+            const numberSet = [];
 
             // Check if randomize checkbox is checked
             if (randomizeCheckbox.checked) {
@@ -89,17 +90,28 @@
             }
 
             // Check if inputs are valid
-            if (startNumber < lastNumber && startNumber + steps <= lastNumber) {
+            if (startNumber < lastNumber) {
                 // Hide the form and show the Stop button
                 barcodeForm.style.display = "none";
                 stopButton.style.display = "block";
 
                 // Generate barcodes at intervals
                 generateInterval = setInterval(() => {
-                    if (randomize) {
-                        startNumber = Math.floor(Math.random() * (lastNumber - startNumberC + 1)) + startNumberC;
-                    }
-                    if (startNumber <= lastNumber) {
+                    if (randomize){
+                        if (numberSet.length === 0) {
+                            for (let i = startNumberC; i <= lastNumber; i++) {
+                                numberSet.push(i);
+                            }
+                        }
+                        const randomIndex = Math.floor(Math.random() * numberSet.length);
+                        startNumber = numberSet.splice(randomIndex, 1)[0];
+                        console.log("list:", numberSet );
+                        // Generate barcode and display it in the SVG element
+                        JsBarcode('#barcode', startNumber.toString(), {
+                            format: barcodeType.value,
+                            displayValue: true
+                        });
+                    } else if (startNumber <= lastNumber) {
                         // Generate barcode and display it in the SVG element
                         JsBarcode('#barcode', startNumber.toString(), {
                             format: barcodeType.value,
